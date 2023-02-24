@@ -20,8 +20,12 @@ const getGoogleConsentUrl = () => {
 };
 
 const getGoogleAccessToken = async (code) => {
-	const { tokens } = await oAuthClient.getToken(code);
-	return tokens.access_token;
+	try {
+		const { tokens } = await oAuthClient.getToken(code);
+		return tokens.access_token;
+	} catch (err) {
+		console.log(err, "accesstoken");
+	}
 };
 
 const getGoogleDocsInHtml = async (accessToken, documentId) => {
@@ -38,18 +42,22 @@ const getGoogleDocsInHtml = async (accessToken, documentId) => {
 		);
 		return res.data;
 	} catch (err) {
-		console.log(err);
+		console.log(err, "getGoogleDocsInHtml");
 	}
 };
 
 const convertBufferToBase64 = (stream) => {
-	let documentBody = "";
-	stream.on("data", (chunk) => {
-		documentBody += chunk.toString();
-	});
-	stream.on("end", () => {
-		console.log(documentBody);
-	});
+	try {
+		let documentBody = "";
+		stream.on("data", (chunk) => {
+			documentBody += chunk.toString();
+		});
+		stream.on("end", () => {
+			console.log(documentBody);
+		});
+	} catch (err) {
+		console.log(err, "convertBufferToBase64");
+	}
 };
 
 export {
